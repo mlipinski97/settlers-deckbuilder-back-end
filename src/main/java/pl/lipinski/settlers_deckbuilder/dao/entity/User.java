@@ -1,7 +1,7 @@
 package pl.lipinski.settlers_deckbuilder.dao.entity;
 
 import lombok.*;
-import pl.lipinski.settlers_deckbuilder.util.Role;
+import pl.lipinski.settlers_deckbuilder.util.enums.Role;
 
 import javax.persistence.*;
 
@@ -26,4 +26,7 @@ public class User {
 
     @Column(nullable = false, name = "role")
     private Role role;
+
+    @Column(nullable = false, name = "is_active")
+    private Boolean isActive;
 }

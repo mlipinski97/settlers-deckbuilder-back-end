@@ -1,4 +1,4 @@
-package pl.lipinski.settlers_deckbuilder.util;
+package pl.lipinski.settlers_deckbuilder.util.enums;
 
 public enum Role {
     USER("USER"),

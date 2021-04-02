@@ -31,17 +31,20 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest,
                                     HttpServletResponse httpServletResponse,
-                                    FilterChain filterChain) throws ServletException, IOException {
+                                    FilterChain filterChain) throws IOException, ServletException {
 
         final String authHeader = httpServletRequest.getHeader("Authorization");
         if(authHeader != null && !authHeader.equals("")) {
             try{
-                System.out.println(authHeader);
                 UsernamePasswordAuthenticationToken authResult = jwtUtil.getAuthenticationByToken(authHeader);
                 authResult.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
                 SecurityContextHolder.getContext().setAuthentication(authResult);
-            } catch (NoSuchElementException | NullPointerException | JWTException | UserNotFoundException e) {
-                throw new AuthenticationException();
+            } catch (NoSuchElementException | NullPointerException e) {
+                throw new AuthenticationException("Problem with JWT");
+            } catch (UserNotFoundException e) {
+                throw new AuthenticationException("Problem with JWT - UserNotFoundException");
+            } catch (JWTException e) {
+                throw new AuthenticationException("Problem with JWT - JWTException");
             }
         }
         filterChain.doFilter(httpServletRequest, httpServletResponse);

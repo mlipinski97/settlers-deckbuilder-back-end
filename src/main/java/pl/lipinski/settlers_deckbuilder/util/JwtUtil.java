@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import pl.lipinski.settlers_deckbuilder.dao.entity.User;
 import pl.lipinski.settlers_deckbuilder.repository.UserRepository;
 import pl.lipinski.settlers_deckbuilder.security.UserDetailsImpl;
+import pl.lipinski.settlers_deckbuilder.util.enums.Role;
 import pl.lipinski.settlers_deckbuilder.util.exception.JWTException;
 import pl.lipinski.settlers_deckbuilder.util.exception.UserNotFoundException;
 
@@ -36,7 +37,7 @@ public class JwtUtil {
         return Jwts.builder()
                 .setSubject(user.getId().toString())
                 .setIssuedAt(new Date())
-                .setExpiration(Date.from(dateTime.plusMinutes(30).atZone(ZoneId.systemDefault()).toInstant()))
+                .setExpiration(Date.from(dateTime.plusMinutes(1).atZone(ZoneId.systemDefault()).toInstant()))
                 .claim("email", user.getEmail())
                 .claim("role", user.getRole())
                 .signWith(SignatureAlgorithm.HS256, "hOK21~-aa02kld.wqj2rWJENEnww90-a11".getBytes())
