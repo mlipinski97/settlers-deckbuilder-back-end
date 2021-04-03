@@ -4,8 +4,6 @@ import org.springframework.stereotype.Service;
 import pl.lipinski.settlers_deckbuilder.dao.entity.Card;
 import pl.lipinski.settlers_deckbuilder.repository.CardRepository;
 
-import java.util.List;
-
 @Service
 public class CardServiceImpl implements CardService {
 

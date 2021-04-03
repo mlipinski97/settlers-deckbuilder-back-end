@@ -1,26 +1,32 @@
 package pl.lipinski.settlers_deckbuilder.util.exception.handler;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import pl.lipinski.settlers_deckbuilder.util.exception.ControllerException;
-import pl.lipinski.settlers_deckbuilder.util.exception.UserNotFoundException;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import pl.lipinski.settlers_deckbuilder.util.exception.*;
 
 import java.time.LocalDateTime;
 
 @RestControllerAdvice
-public class ControllerExceptionHandler {
+public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(value = {
-            UserNotFoundException.class
+    @ExceptionHandler({
+            UserNotFoundException.class,
+            ElementNotFoundByIdException.class,
+            ElementNotFoundByNameException.class,
+            EmailTakenException.class,
+            PermissionDeniedException.class,
+            JWTException.class,
+            WrongCredentialsException.class
     })
     public ResponseEntity<ApiErrorResponse> handleException(ControllerException ce) {
         ApiErrorResponse apiErrorResponse = new ApiErrorResponse(
                 ce.getErrorCode(),
                 ce.getLocalizedMessage(),
-                LocalDateTime.now()
+                LocalDateTime.now(),
+                ce.getErrorStatus()
         );
-        return new ResponseEntity<>(apiErrorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(apiErrorResponse, apiErrorResponse.getErrorStatus());
     }
 }
