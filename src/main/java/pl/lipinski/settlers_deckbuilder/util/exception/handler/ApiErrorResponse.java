@@ -1,5 +1,6 @@
 package pl.lipinski.settlers_deckbuilder.util.exception.handler;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,6 +16,8 @@ import java.time.LocalDateTime;
 public class ApiErrorResponse {
     private Integer statusCode;
     private String message;
+    @JsonFormat(pattern="dd-MM-yyyy HH:mm:ss")
     private LocalDateTime errorTime;
     private HttpStatus errorStatus;
+
 }
