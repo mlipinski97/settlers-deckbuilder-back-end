@@ -4,7 +4,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -22,8 +21,6 @@ import pl.lipinski.settlers_deckbuilder.util.exception.UserNotFoundException;
 import pl.lipinski.settlers_deckbuilder.util.exception.WrongCredentialsException;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.stream.Collectors;
 
 import static pl.lipinski.settlers_deckbuilder.util.enums.ErrorCode.*;
