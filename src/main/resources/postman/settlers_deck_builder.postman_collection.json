@@ -15,7 +15,7 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.sdb_Environment.set('jwt_token', pm.response.json().token);"
+									"pm.environment.set('jwt_token', pm.response.json().token);"
 								],
 								"type": "text/javascript"
 							}
@@ -65,7 +65,7 @@
 					"name": "card",
 					"item": [
 						{
-							"name": "get all carrds",
+							"name": "get all cards",
 							"request": {
 								"auth": {
 									"type": "bearer",
@@ -103,6 +103,104 @@
 				{
 					"name": "deck",
 					"item": []
+				},
+				{
+					"name": "user",
+					"item": [
+						{
+							"name": "register",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"user@gmail.com\",\r\n    \"password\": \"user\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8080/api/user/register",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"user",
+										"register"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete user by email",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"url": {
+									"raw": "localhost:8080/api/user/delete/user@gmail.com",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"user",
+										"delete",
+										"user@gmail.com"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get all users",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:8080/api/user",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"user"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get by email",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:8080/api/user/getbyemail/user@email.com",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"user",
+										"getbyemail",
+										"user@email.com"
+									]
+								}
+							},
+							"response": []
+						}
+					]
 				}
 			]
 		}

@@ -108,8 +108,8 @@ public class UserServiceImpl implements UserService {
 
     private void validatePermission(String email) throws PermissionDeniedException {
         ArrayList<? extends GrantedAuthority> authorities = new ArrayList<>(SecurityContextHolder.getContext().getAuthentication().getAuthorities());
-        System.out.println(authorities.get(0).getAuthority());
-        if(!SecurityContextHolder.getContext().getAuthentication().getName().equals(email)){
+        if(!SecurityContextHolder.getContext().getAuthentication().getName().equals(email)
+        && !authorities.get(0).getAuthority().equals(Role.ADMIN.getRole())){
             throw new PermissionDeniedException(
                     USER_DONT_HAVE_PERMISSIONS_ERROR_MESSAGE.getMessage(),
                     USER_DONT_HAVE_PERMISSIONS_ERROR_CODE.getValue()
