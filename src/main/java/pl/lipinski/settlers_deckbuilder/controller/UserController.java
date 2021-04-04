@@ -25,7 +25,7 @@ public class UserController {
         return userService.getAll();
     }
 
-    @GetMapping("/getbymail/{email}")
+    @GetMapping("/getbyemail/{email}")
     public UserDto getByEmail(@PathVariable String email) throws UserNotFoundException {
         return userService.findByEmail(email);
     }

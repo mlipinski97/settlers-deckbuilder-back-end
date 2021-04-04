@@ -37,7 +37,7 @@ public class JwtUtil {
         return Jwts.builder()
                 .setSubject(user.getId().toString())
                 .setIssuedAt(new Date())
-                .setExpiration(Date.from(dateTime.plusMinutes(1).atZone(ZoneId.systemDefault()).toInstant()))
+                .setExpiration(Date.from(dateTime.plusMinutes(30).atZone(ZoneId.systemDefault()).toInstant()))
                 .claim("email", user.getEmail())
                 .claim("role", user.getRole())
                 .signWith(SignatureAlgorithm.HS256, "hOK21~-aa02kld.wqj2rWJENEnww90-a11".getBytes())
