@@ -20,27 +20,48 @@ public class Card {
     @Column(nullable = false, name = "name")
     private String name;
 
-    @Column(nullable = false, name = "color")
-    private String color;
-
-    @Column(nullable = false, name = "number_of_copies")
-    private Integer number_of_copies;
-
-    @Column(nullable = false, name = "affiliation")
-    private String affiliation;
+    @Column(nullable = false, name = "faction")
+    private String faction;
 
     @Column(nullable = false, name = "type")
     private String type;
 
-    @Column(nullable = false, name = "effect")
+    @Column(name = "cost_foundation")
+    private Integer costFoundation;
+
+    @Column(name = "cost_first_resource_quantity")
+    private Integer costFirstResourceQuantity;
+
+    @Column(name = "cost_first_resource_type")
+    private String costFirstResourceType;
+
+    @Column(name = "cost_second_resource_quantity")
+    private Integer costSecondResourceQuantity;
+
+    @Column(name = "cost_second_resource_type")
+    private String costSecondResourceType;
+
+    @Column(name = "raise_first_resource_quantity")
+    private String raiseFirstResourceQuantity;
+
+    @Column(name = "raise_first_resource_type")
+    private String raiseFirstResourceType;
+
+    @Column(name = "raise_second_resource_quantity")
+    private String raiseSecondResourceQuantity;
+
+    @Column(name = "raise_second_resource_type")
+    private String raiseSecondResourceType;
+
+    @Column(name = "deal_effect")
+    private String dealEffect;
+
+    @Column(nullable = false, name = "color")
+    private String color;
+
+    @Column(nullable = false, name = "quantity")
+    private String quantity;
+
+    @Column(nullable = false,name = "effect")
     private String effect;
-
-    @Column(name = "building_bonus")
-    private String building_bonus;
-
-    @Column(nullable = false, name = "cost")
-    private String cost;
-
-    @Column(nullable = false, name = "expansion")
-    private String expansion;
 }
