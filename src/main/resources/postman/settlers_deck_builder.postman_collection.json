@@ -85,6 +85,150 @@
 								"method": "GET",
 								"header": [],
 								"url": {
+									"raw": "localhost:8080/api/card?page=0&size=10&faction=japanese&type=action&color=black&quantity=2&expansion=base game",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"card"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "0"
+										},
+										{
+											"key": "size",
+											"value": "10"
+										},
+										{
+											"key": "faction",
+											"value": "japanese"
+										},
+										{
+											"key": "type",
+											"value": "action"
+										},
+										{
+											"key": "color",
+											"value": "black"
+										},
+										{
+											"key": "quantity",
+											"value": "2"
+										},
+										{
+											"key": "expansion",
+											"value": "base game"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get by id",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{jwt_token}}",
+											"type": "string"
+										},
+										{
+											"key": "password",
+											"value": "{{jwt}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:8080/api/card/1",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"card",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get all by name like",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{jwt_token}}",
+											"type": "string"
+										},
+										{
+											"key": "password",
+											"value": "{{jwt}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:8080/api/card/getbyname/ninjas",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"card",
+										"getbyname",
+										"ninjas"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "add card",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{jwt_token}}",
+											"type": "string"
+										},
+										{
+											"key": "password",
+											"value": "{{jwt}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"ninjas2\",\r\n    \"faction\": \"japanese\",\r\n    \"type\": \"action\",\r\n    \"costFoundation\": 1,\r\n    \"costFirstResourceQuantity\": 1,\r\n    \"costFirstResourceType\": \"stone\",\r\n    \"costSecondResourceQuantity\": null,\r\n    \"costSecondResourceType\": null,\r\n    \"raiseFirstResourceQuantity\": 1,\r\n    \"raiseFirstResourceType\": \"victory point\",\r\n    \"raiseSecondResourceQuantity\": null,\r\n    \"raiseSecondResourceType\": null,\r\n    \"dealEffect\": \"sword\",\r\n    \"color\": \"black\",\r\n    \"quantity\": 2,\r\n    \"effect\": \"action: spend 1 worker to choose one enemy Deal. Discard it and immediately gain the Goods the Deal provides.\",\r\n    \"buildingBonus\": \"2 workers to immediately use as samurai.\",\r\n    \"expansion\": \"base game\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
 									"raw": "localhost:8080/api/card",
 									"host": [
 										"localhost"
@@ -93,6 +237,84 @@
 									"path": [
 										"api",
 										"card"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update card",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{jwt_token}}",
+											"type": "string"
+										},
+										{
+											"key": "password",
+											"value": "{{jwt}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"id\": 1,\r\n    \"name\": \"ninjasnijas\",\r\n    \"faction\": \"japanese\",\r\n    \"type\": \"action\",\r\n    \"costFoundation\": 1,\r\n    \"costFirstResourceQuantity\": 1,\r\n    \"costFirstResourceType\": \"stone\",\r\n    \"costSecondResourceQuantity\": null,\r\n    \"costSecondResourceType\": null,\r\n    \"raiseFirstResourceQuantity\": 1,\r\n    \"raiseFirstResourceType\": \"victory point\",\r\n    \"raiseSecondResourceQuantity\": null,\r\n    \"raiseSecondResourceType\": null,\r\n    \"dealEffect\": \"sword\",\r\n    \"color\": \"black\",\r\n    \"quantity\": 2,\r\n    \"effect\": \"action: spend 1 worker to choose one enemy Deal. Discard it and immediately gain the Goods the Deal provides.\",\r\n    \"buildingBonus\": \"2 workers to immediately use as samurai.\",\r\n    \"expansion\": \"base game\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8080/api/card",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"card"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete card by id",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{jwt_token}}",
+											"type": "string"
+										},
+										{
+											"key": "password",
+											"value": "{{jwt}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "localhost:8080/api/card/2",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"card",
+										"2"
 									]
 								}
 							},

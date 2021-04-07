@@ -42,13 +42,13 @@ public class Card {
     private String costSecondResourceType;
 
     @Column(name = "raise_first_resource_quantity")
-    private String raiseFirstResourceQuantity;
+    private Integer raiseFirstResourceQuantity;
 
     @Column(name = "raise_first_resource_type")
     private String raiseFirstResourceType;
 
     @Column(name = "raise_second_resource_quantity")
-    private String raiseSecondResourceQuantity;
+    private Integer raiseSecondResourceQuantity;
 
     @Column(name = "raise_second_resource_type")
     private String raiseSecondResourceType;
@@ -60,8 +60,15 @@ public class Card {
     private String color;
 
     @Column(nullable = false, name = "quantity")
-    private String quantity;
+    private Integer quantity;
 
-    @Column(nullable = false,name = "effect")
+    @Column(nullable = false, name = "effect")
     private String effect;
+
+    @Column(nullable = false, name = "building_bonus")
+    private String buildingBonus;
+
+    @Column(nullable = false,name = "expansion")
+    private String expansion;
+
 }
