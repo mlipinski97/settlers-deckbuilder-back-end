@@ -5,7 +5,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import pl.lipinski.settlers_deckbuilder.util.exception.handler.RestAuthenticationEntryPoint;
 import pl.lipinski.settlers_deckbuilder.util.JwtUtil;
 import pl.lipinski.settlers_deckbuilder.util.exception.JWTException;
 import pl.lipinski.settlers_deckbuilder.util.exception.UserNotFoundException;
@@ -22,11 +21,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
 
     private final JwtUtil jwtUtil;
-    private final RestAuthenticationEntryPoint restAuthenticationEntryPoint;
 
-    public JwtRequestFilter(JwtUtil jwtUtil, RestAuthenticationEntryPoint restAuthenticationEntryPoint) {
+    public JwtRequestFilter(JwtUtil jwtUtil) {
         this.jwtUtil = jwtUtil;
-        this.restAuthenticationEntryPoint = restAuthenticationEntryPoint;
     }
 
     @Override
