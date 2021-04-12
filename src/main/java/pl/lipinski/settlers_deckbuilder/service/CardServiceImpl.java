@@ -14,7 +14,7 @@ import pl.lipinski.settlers_deckbuilder.util.specification.CardSpecification;
 
 import java.util.stream.Collectors;
 
-import static pl.lipinski.settlers_deckbuilder.util.enums.ErrorCode.CAN_NOT_FIND_CARD_BY_EMAIL_ERROR_CODE;
+import static pl.lipinski.settlers_deckbuilder.util.enums.ErrorCode.CAN_NOT_FIND_CARD_BY_ID_ERROR_CODE;
 import static pl.lipinski.settlers_deckbuilder.util.enums.ErrorCode.CAN_NOT_FIND_USER_BY_ID_ERROR_CODE;
 import static pl.lipinski.settlers_deckbuilder.util.enums.ErrorMessage.CAN_NOT_FIND_CARD_BY_ID_ERROR_MESSAGE;
 
@@ -58,7 +58,7 @@ public class CardServiceImpl implements CardService {
         Card card = cardRepository.findById(id)
                 .orElseThrow(() -> new ElementNotFoundByIdException(
                         CAN_NOT_FIND_CARD_BY_ID_ERROR_MESSAGE.getMessage() + id,
-                        CAN_NOT_FIND_CARD_BY_EMAIL_ERROR_CODE.getValue()
+                        CAN_NOT_FIND_CARD_BY_ID_ERROR_CODE.getValue()
                 ));
         return modelMapper.map(card, CardDto.class);
     }

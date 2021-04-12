@@ -1,8 +1,10 @@
 package pl.lipinski.settlers_deckbuilder.dao.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -17,11 +19,16 @@ public class Deck {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
     @ManyToOne
     private User owner;
 
+    @Column(nullable = false, name = "name")
+    private String name;
 
-    //TODO
-    //ManyToMany deck <---> card | need to create intersection. Not today. Today fever is killing me. Remember to do it.
+    @Column(nullable = false, name = "access_level")
+    private String accessLevel;
+
+    @OneToMany(mappedBy = "deck", cascade = CascadeType.ALL)
+    List<CardDeckIntersection> cardDeckIntersections;
+
 }

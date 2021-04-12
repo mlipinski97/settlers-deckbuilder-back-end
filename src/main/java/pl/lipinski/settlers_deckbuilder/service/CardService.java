@@ -22,11 +22,4 @@ public interface CardService {
     void deleteById(Long id) throws ElementNotFoundByIdException;
 
     CardDto updateCard(CardDto cardDto) throws ElementNotFoundByIdException;
-    /*
-    Iterable<Card> findByColor();
-    Iterable<Card> findByNumberOfCopies();
-    Iterable<Card> findByFaction();
-    Iterable<Card> findByType();
-    Iterable<Card> findByExpansion();
-    Iterable<Card> findByQuantity();*/
 }
