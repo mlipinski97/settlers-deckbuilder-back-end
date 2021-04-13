@@ -8,3 +8,12 @@ raise_second_resource_quantity, raise_second_resource_type, deal_effect, color, 
 values ('ninjas', 'japanese', 'action', 1, 1, 'stone', null, null, 1, 'victory point', null, null, 'sword', 'black', 2,
 'action: spend 1 worker to choose one enemy Deal. Discard it and immediately gain the Goods the Deal provides.',
 '2 workers to immediately use as samurai.', 'base game');
+
+insert into deck (name, owner_id, access_level)
+values ('test_deck', 1, 'PUBLIC'),
+('test_deck2', 1, 'PRIVATE'),
+('test_deck3', 1, 'PUBLIC');
+
+insert into card_deck_intersection (card_id, deck_id)
+values (1, 1);
+

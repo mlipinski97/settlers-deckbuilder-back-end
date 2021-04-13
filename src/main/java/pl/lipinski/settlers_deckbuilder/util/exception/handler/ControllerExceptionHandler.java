@@ -18,7 +18,8 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
             EmailTakenException.class,
             PermissionDeniedException.class,
             JWTException.class,
-            WrongCredentialsException.class
+            WrongCredentialsException.class,
+            CardDeckIntersectionPKViolationException.class
     })
     public ResponseEntity<ApiErrorResponse> handleException(ControllerException ce) {
         ApiErrorResponse apiErrorResponse = new ApiErrorResponse(

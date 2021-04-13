@@ -9,7 +9,7 @@
 			"name": "Authentication",
 			"item": [
 				{
-					"name": "Login",
+					"name": "Login user",
 					"event": [
 						{
 							"listen": "test",
@@ -39,6 +39,54 @@
 						"body": {
 							"mode": "raw",
 							"raw": "{\r\n    \"email\": \"user@email.com\",\r\n    \"password\": \"user\"\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/user/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"user",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login Admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.environment.set('jwt_token', pm.response.json().token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"admin@email.com\",\r\n    \"password\": \"admin\"\r\n}"
 						},
 						"url": {
 							"raw": "http://localhost:8080/api/user/login",
@@ -324,7 +372,280 @@
 				},
 				{
 					"name": "deck",
-					"item": []
+					"item": [
+						{
+							"name": "get all with specifications",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:8080/api/deck/?page=0&size=16&deckNamePattern=_d",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"deck",
+										""
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "0"
+										},
+										{
+											"key": "size",
+											"value": "16"
+										},
+										{
+											"key": "deckNamePattern",
+											"value": "_d"
+										},
+										{
+											"key": "ownerEmail",
+											"value": "user@email.com",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get by id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:8080/api/deck/findbyid/1",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"deck",
+										"findbyid",
+										"1"
+									],
+									"query": [
+										{
+											"key": "ownerEmail",
+											"value": "user@email.com",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "add card to deck",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "localhost:8080/api/deck/addcardtodeck/1/2",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"deck",
+										"addcardtodeck",
+										"1",
+										"2"
+									],
+									"query": [
+										{
+											"key": "ownerEmail",
+											"value": "user@email.com",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete deck",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "localhost:8080/api/deck/1",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"deck",
+										"1"
+									],
+									"query": [
+										{
+											"key": "ownerEmail",
+											"value": "user@email.com",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "set access level to public",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"url": {
+									"raw": "localhost:8080/api/deck/setpublic/2",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"deck",
+										"setpublic",
+										"2"
+									],
+									"query": [
+										{
+											"key": "ownerEmail",
+											"value": "user@email.com",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "set access level to private",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"url": {
+									"raw": "localhost:8080/api/deck/setprivate/2",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"deck",
+										"setprivate",
+										"2"
+									],
+									"query": [
+										{
+											"key": "ownerEmail",
+											"value": "user@email.com",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get deck content (cards)",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:8080/api/deck/getcontent/2",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"deck",
+										"getcontent",
+										"2"
+									],
+									"query": [
+										{
+											"key": "ownerEmail",
+											"value": "user@email.com",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete card from deck",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "localhost:8080/api/deck/removecardfromdeck/1/2",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"deck",
+										"removecardfromdeck",
+										"1",
+										"2"
+									],
+									"query": [
+										{
+											"key": "ownerEmail",
+											"value": "user@email.com",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "add empty deck Copy",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"testing deck\",\r\n    \"ownerId\": 1,\r\n    \"ownerEmail\": \"user@email.com\",\r\n    \"accessLevel\": \"PUBLIC\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8080/api/deck/",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"deck",
+										""
+									],
+									"query": [
+										{
+											"key": "ownerEmail",
+											"value": "user@email.com",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
 				},
 				{
 					"name": "user",
