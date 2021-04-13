@@ -15,6 +15,5 @@ values ('test_deck', 1, 'PUBLIC'),
 ('test_deck3', 1, 'PUBLIC');
 
 insert into card_deck_intersection (card_id, deck_id)
-values (1, 1),
-(1, 1),
-(1, 1);
+values (1, 1);
+

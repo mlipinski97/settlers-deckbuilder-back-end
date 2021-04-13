@@ -5,6 +5,7 @@ import pl.lipinski.settlers_deckbuilder.dao.dto.CardDto;
 import pl.lipinski.settlers_deckbuilder.dao.dto.DeckDto;
 import pl.lipinski.settlers_deckbuilder.service.CardDeckIntersectionService;
 import pl.lipinski.settlers_deckbuilder.service.DeckService;
+import pl.lipinski.settlers_deckbuilder.util.exception.CardDeckIntersectionPKViolationException;
 import pl.lipinski.settlers_deckbuilder.util.exception.ElementNotFoundByIdException;
 import pl.lipinski.settlers_deckbuilder.util.exception.PermissionDeniedException;
 import pl.lipinski.settlers_deckbuilder.util.exception.UserNotFoundException;
@@ -57,5 +58,14 @@ public class DeckController {
     public Iterable<CardDto> getDeckContent(@PathVariable Long deckId) throws ElementNotFoundByIdException, PermissionDeniedException {
         return cardDeckIntersectionService.findAllCardsInDeckByDeckId(deckId);
     }
-    //TODO, adding cards to decks, deleting cards from decks.
+
+    @DeleteMapping("/removecardfromdeck/{cardId}/{deckId}")
+    public void deleteCardFromDeck(@PathVariable Long cardId, @PathVariable Long deckId) throws ElementNotFoundByIdException {
+        cardDeckIntersectionService.deleteCardFromDeck(cardId, deckId);
+    }
+
+    @PostMapping("/addcardtodeck/{cardId}/{deckId}")
+    public void addCardToDeck(@PathVariable Long cardId, @PathVariable Long deckId) throws ElementNotFoundByIdException, PermissionDeniedException, CardDeckIntersectionPKViolationException {
+        cardDeckIntersectionService.addCardToDeck(cardId, deckId);
+    }
 }
