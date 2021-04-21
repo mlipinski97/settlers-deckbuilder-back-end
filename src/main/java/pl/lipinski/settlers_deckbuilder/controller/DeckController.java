@@ -68,4 +68,9 @@ public class DeckController {
     public void addCardToDeck(@PathVariable Long cardId, @PathVariable Long deckId) throws ElementNotFoundByIdException, PermissionDeniedException, CardDeckIntersectionPKViolationException {
         cardDeckIntersectionService.addCardToDeck(cardId, deckId);
     }
+
+    @PostMapping("/copydeck/{deckId}")
+    public void copyDeckById(@PathVariable Long deckId, @RequestBody DeckDto deckDto) throws UserNotFoundException, ElementNotFoundByIdException, CardDeckIntersectionPKViolationException {
+        cardDeckIntersectionService.copyDeckById(deckId, deckDto);
+    }
 }

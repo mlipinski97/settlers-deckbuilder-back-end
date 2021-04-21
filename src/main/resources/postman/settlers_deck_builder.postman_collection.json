@@ -610,7 +610,7 @@
 							"response": []
 						},
 						{
-							"name": "add empty deck Copy",
+							"name": "add empty deck",
 							"request": {
 								"method": "POST",
 								"header": [],
@@ -633,6 +633,43 @@
 										"api",
 										"deck",
 										""
+									],
+									"query": [
+										{
+											"key": "ownerEmail",
+											"value": "user@email.com",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "copy deck by id",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"testing copied deck\",\r\n    \"ownerId\": 1,\r\n    \"ownerEmail\": \"user@email.com\",\r\n    \"accessLevel\": \"PUBLIC\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8080/api/deck/copydeck/1",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"deck",
+										"copydeck",
+										"1"
 									],
 									"query": [
 										{
