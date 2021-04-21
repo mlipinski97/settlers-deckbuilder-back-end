@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import pl.lipinski.settlers_deckbuilder.dao.dto.CardDto;
+import pl.lipinski.settlers_deckbuilder.dao.dto.DeckDto;
 import pl.lipinski.settlers_deckbuilder.dao.entity.Card;
 import pl.lipinski.settlers_deckbuilder.dao.entity.CardDeckIntersection;
 import pl.lipinski.settlers_deckbuilder.dao.entity.Deck;
@@ -13,6 +14,7 @@ import pl.lipinski.settlers_deckbuilder.repository.DeckRepository;
 import pl.lipinski.settlers_deckbuilder.util.exception.CardDeckIntersectionPKViolationException;
 import pl.lipinski.settlers_deckbuilder.util.exception.ElementNotFoundByIdException;
 import pl.lipinski.settlers_deckbuilder.util.exception.PermissionDeniedException;
+import pl.lipinski.settlers_deckbuilder.util.exception.UserNotFoundException;
 
 import java.util.stream.Collectors;
 
@@ -77,8 +79,25 @@ public class CardDeckIntersectionServiceImpl implements CardDeckIntersectionServ
         cardDeckIntersectionRepository.save(cdi);
     }
 
+    @Override
+    public void copyDeckById(Long deckId, DeckDto deckDto) throws UserNotFoundException, ElementNotFoundByIdException, CardDeckIntersectionPKViolationException {
+        DeckDto newDeck = deckService.addEmptyDeck(deckDto);
+        Iterable<Card> cards = Lists.newArrayList(cardDeckIntersectionRepository.findAllByDeck_Id(deckId))
+                .stream()
+                .map(CardDeckIntersection::getCard)
+                .collect(Collectors.toList());
+        for (Card card : cards) {
+            try {
+                addCardToDeck(card.getId(), newDeck.getId());
+            } catch (ElementNotFoundByIdException | CardDeckIntersectionPKViolationException e){
+                deckService.deleteById(newDeck.getId());
+                throw e;
+            }
+        }
+    }
+
     private void checkForPKViolation(Long cardId, Long deckId) throws CardDeckIntersectionPKViolationException {
-        if(cardDeckIntersectionRepository.findByDeckIdAndCardId(deckId, cardId).isPresent()){
+        if (cardDeckIntersectionRepository.findByDeckIdAndCardId(deckId, cardId).isPresent()) {
             throw new CardDeckIntersectionPKViolationException(
                     CARD_DECK_INTERSECTION_ALREADY_EXISTS_ERROR_MESSAGE.getMessage(),
                     CARD_DECK_INTERSECTION_ALREADY_EXISTS_ERROR_CODE.getValue());
