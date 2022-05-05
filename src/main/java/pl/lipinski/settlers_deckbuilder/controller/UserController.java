@@ -1,23 +1,32 @@
 package pl.lipinski.settlers_deckbuilder.controller;
 
+import io.jsonwebtoken.impl.DefaultClaims;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.lipinski.settlers_deckbuilder.dao.dto.LoginDto;
 import pl.lipinski.settlers_deckbuilder.dao.dto.LoginResponseDto;
 import pl.lipinski.settlers_deckbuilder.dao.dto.RegisterDto;
 import pl.lipinski.settlers_deckbuilder.dao.dto.UserDto;
 import pl.lipinski.settlers_deckbuilder.service.UserService;
+import pl.lipinski.settlers_deckbuilder.util.JwtUtil;
 import pl.lipinski.settlers_deckbuilder.util.exception.EmailTakenException;
 import pl.lipinski.settlers_deckbuilder.util.exception.PermissionDeniedException;
 import pl.lipinski.settlers_deckbuilder.util.exception.UserNotFoundException;
 import pl.lipinski.settlers_deckbuilder.util.exception.WrongCredentialsException;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
     private final UserService userService;
+    private final JwtUtil jwtUtil;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, JwtUtil util) {
         this.userService = userService;
+        this.jwtUtil = util;
     }
 
     @GetMapping
@@ -44,4 +53,5 @@ public class UserController {
     public UserDto register(@RequestBody RegisterDto registerDto) throws EmailTakenException {
         return userService.register(registerDto);
     }
+
 }

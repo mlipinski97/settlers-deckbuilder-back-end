@@ -1,5 +1,6 @@
 package pl.lipinski.settlers_deckbuilder.filter;
 
+import lombok.SneakyThrows;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -9,6 +10,7 @@ import pl.lipinski.settlers_deckbuilder.util.JwtUtil;
 import pl.lipinski.settlers_deckbuilder.util.exception.JWTException;
 import pl.lipinski.settlers_deckbuilder.util.exception.UserNotFoundException;
 
+import javax.security.sasl.AuthenticationException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -26,27 +28,23 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         this.jwtUtil = jwtUtil;
     }
 
+    @SneakyThrows
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest,
                                     HttpServletResponse httpServletResponse,
                                     FilterChain filterChain) throws IOException, ServletException {
 
         final String authHeader = httpServletRequest.getHeader("Authorization");
-        if(authHeader != null && !authHeader.equals("")) {
-            try{
+        if (authHeader != null && !authHeader.equals("")) {
+            try {
                 UsernamePasswordAuthenticationToken authResult = jwtUtil.getAuthenticationByToken(authHeader);
                 authResult.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
                 SecurityContextHolder.getContext().setAuthentication(authResult);
-            } catch (NoSuchElementException | UserNotFoundException | JWTException |NullPointerException e) {
-                /*SecurityContextHolder.clearContext();
-                restAuthenticationEntryPoint.commence(httpServletRequest,
-                        httpServletResponse,
-                        new AuthenticationException(AUTHORIZATION_ERROR_OCCURRED_ERROR_MESSAGE.getMessage()) {
-                });*/
+            } catch (NoSuchElementException | UserNotFoundException | JWTException | NullPointerException | AuthenticationException e) {
+                throw e;
             }
         }
         filterChain.doFilter(httpServletRequest, httpServletResponse);
     }
-
 
 }

@@ -2,7 +2,7 @@ package pl.lipinski.settlers_deckbuilder.controller;
 
 import org.springframework.web.bind.annotation.*;
 import pl.lipinski.settlers_deckbuilder.dao.dto.CardDto;
-import pl.lipinski.settlers_deckbuilder.service.CardServiceImpl;
+import pl.lipinski.settlers_deckbuilder.service.implementation.CardServiceImpl;
 import pl.lipinski.settlers_deckbuilder.util.exception.ElementNotFoundByIdException;
 
 @RestController

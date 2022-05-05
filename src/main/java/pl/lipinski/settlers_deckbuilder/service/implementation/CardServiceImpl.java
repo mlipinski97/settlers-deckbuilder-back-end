@@ -1,4 +1,4 @@
-package pl.lipinski.settlers_deckbuilder.service;
+package pl.lipinski.settlers_deckbuilder.service.implementation;
 
 import com.google.common.collect.Lists;
 import org.modelmapper.ModelMapper;
@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import pl.lipinski.settlers_deckbuilder.dao.dto.CardDto;
 import pl.lipinski.settlers_deckbuilder.dao.entity.Card;
 import pl.lipinski.settlers_deckbuilder.repository.CardRepository;
+import pl.lipinski.settlers_deckbuilder.service.CardService;
 import pl.lipinski.settlers_deckbuilder.util.exception.ElementNotFoundByIdException;
 import pl.lipinski.settlers_deckbuilder.util.specification.CardSpecification;
 

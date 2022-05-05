@@ -1,4 +1,4 @@
-package pl.lipinski.settlers_deckbuilder.service;
+package pl.lipinski.settlers_deckbuilder.service.implementation;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -13,6 +13,7 @@ import pl.lipinski.settlers_deckbuilder.dao.dto.RegisterDto;
 import pl.lipinski.settlers_deckbuilder.dao.dto.UserDto;
 import pl.lipinski.settlers_deckbuilder.dao.entity.User;
 import pl.lipinski.settlers_deckbuilder.repository.UserRepository;
+import pl.lipinski.settlers_deckbuilder.service.UserService;
 import pl.lipinski.settlers_deckbuilder.util.JwtUtil;
 import pl.lipinski.settlers_deckbuilder.util.enums.Role;
 import pl.lipinski.settlers_deckbuilder.util.exception.EmailTakenException;
@@ -65,9 +66,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public LoginResponseDto authenticate(LoginDto loginDto) throws UserNotFoundException, WrongCredentialsException {
         try {
-            UsernamePasswordAuthenticationToken upAuthtoken =
+            UsernamePasswordAuthenticationToken upAuthToken =
                     new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword());
-            authenticationManager.authenticate(upAuthtoken);
+            authenticationManager.authenticate(upAuthToken);
         } catch (Exception e) {
             throw new WrongCredentialsException(WRONG_CREDENTIALS_ERROR_MESSAGE.getMessage(),
                     WRONG_CREDENTIALS_ERROR_CODE.getValue());
@@ -93,11 +94,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto register(RegisterDto registerDto) throws EmailTakenException {
-        if(userRepository.findByEmail(registerDto.getEmail()).isPresent()){
+        if (userRepository.findByEmail(registerDto.getEmail()).isPresent()) {
             throw new EmailTakenException(
-                    EMAIL_ALREADY_TAKEN_ERROR_MESSAGE.getMessage() +registerDto.getEmail(),
+                    EMAIL_ALREADY_TAKEN_ERROR_MESSAGE.getMessage() + registerDto.getEmail(),
                     EMAIL_ALREADY_TAKEN_ERROR_CODE.getValue()
-                    );
+            );
         }
         User newUser = modelMapper.map(registerDto, User.class);
         newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
@@ -107,9 +108,10 @@ public class UserServiceImpl implements UserService {
     }
 
     private void validatePermission(String email) throws PermissionDeniedException {
-        ArrayList<? extends GrantedAuthority> authorities = new ArrayList<>(SecurityContextHolder.getContext().getAuthentication().getAuthorities());
-        if(!SecurityContextHolder.getContext().getAuthentication().getName().equals(email)
-        && !authorities.get(0).getAuthority().equals(Role.ADMIN.getRole())){
+        ArrayList<? extends GrantedAuthority> authorities = new ArrayList<>(SecurityContextHolder
+                .getContext().getAuthentication().getAuthorities());
+        if (!SecurityContextHolder.getContext().getAuthentication().getName().equals(email)
+                && !authorities.get(0).getAuthority().equals(Role.ADMIN.getRole())) {
             throw new PermissionDeniedException(
                     USER_DONT_HAVE_PERMISSIONS_ERROR_MESSAGE.getMessage(),
                     USER_DONT_HAVE_PERMISSIONS_ERROR_CODE.getValue()

@@ -1,4 +1,4 @@
-package pl.lipinski.settlers_deckbuilder.service;
+package pl.lipinski.settlers_deckbuilder.service.implementation;
 
 import com.google.common.collect.Lists;
 import org.modelmapper.ModelMapper;
@@ -11,6 +11,8 @@ import pl.lipinski.settlers_deckbuilder.dao.entity.Deck;
 import pl.lipinski.settlers_deckbuilder.repository.CardDeckIntersectionRepository;
 import pl.lipinski.settlers_deckbuilder.repository.CardRepository;
 import pl.lipinski.settlers_deckbuilder.repository.DeckRepository;
+import pl.lipinski.settlers_deckbuilder.service.CardDeckIntersectionService;
+import pl.lipinski.settlers_deckbuilder.service.DeckService;
 import pl.lipinski.settlers_deckbuilder.util.exception.CardDeckIntersectionPKViolationException;
 import pl.lipinski.settlers_deckbuilder.util.exception.ElementNotFoundByIdException;
 import pl.lipinski.settlers_deckbuilder.util.exception.PermissionDeniedException;
@@ -42,7 +44,8 @@ public class CardDeckIntersectionServiceImpl implements CardDeckIntersectionServ
     }
 
     @Override
-    public Iterable<CardDto> findAllCardsInDeckByDeckId(Long deckId) throws ElementNotFoundByIdException, PermissionDeniedException {
+    public Iterable<CardDto> findAllCardsInDeckByDeckId(Long deckId) throws ElementNotFoundByIdException,
+            PermissionDeniedException {
         deckService.findById(deckId);
         return Lists.newArrayList(cardDeckIntersectionRepository.findAllByDeck_Id(deckId))
                 .stream()
@@ -89,7 +92,7 @@ public class CardDeckIntersectionServiceImpl implements CardDeckIntersectionServ
         for (Card card : cards) {
             try {
                 addCardToDeck(card.getId(), newDeck.getId());
-            } catch (ElementNotFoundByIdException | CardDeckIntersectionPKViolationException e){
+            } catch (ElementNotFoundByIdException | CardDeckIntersectionPKViolationException e) {
                 deckService.deleteById(newDeck.getId());
                 throw e;
             }
