@@ -114,9 +114,9 @@ public class DeckServiceImpl implements DeckService {
     }
 
     private void validatePermissionByEmail(String email) throws PermissionDeniedException {
-        ArrayList<? extends GrantedAuthority> authorities = new ArrayList<>(SecurityContextHolder
-                .getContext().getAuthentication().getAuthorities());
-        if (!SecurityContextHolder.getContext().getAuthentication().getName().equals(email)
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        ArrayList<? extends GrantedAuthority> authorities = new ArrayList<>(authentication.getAuthorities());
+        if (!authentication.getName().equals(email)
                 && !authorities.get(0).getAuthority().equals(Role.ADMIN.getRole())) {
             throw new PermissionDeniedException(
                     USER_DONT_HAVE_PERMISSIONS_ERROR_MESSAGE.getMessage(),
