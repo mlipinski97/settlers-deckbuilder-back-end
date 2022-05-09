@@ -53,8 +53,6 @@ public class DeckServiceImpl implements DeckService {
                 .and(DeckSpecification.deckHasOwnerEmail(ownerEmail));
 
         String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-
-
         return deckRepository.findAll(deckSpecification, cardPaging)
                 .stream()
                 .filter(deck -> deck.getAccessLevel().equals(AccessLevel.PUBLIC.getAccessLevel())
