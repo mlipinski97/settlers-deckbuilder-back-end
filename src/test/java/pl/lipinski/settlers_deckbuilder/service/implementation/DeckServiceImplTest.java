@@ -295,6 +295,7 @@ class DeckServiceImplTest {
         assertThrows(ElementNotFoundByIdException.class, () -> deckService.setDeckPublic(wrongId));
         verify(deckRepository, never()).save(any());
     }
+
     @Test
     @DisplayName("when given correct Id and user doesnt have permission when setting public it throws PermissionDeniedException")
     public void whenGivenCorrectIdAndDontHavePermissionWhenSettingPublicItThrowsPermissionDeniedException() {
