@@ -2,7 +2,7 @@ package pl.lipinski.settlers_deckbuilder.util.enums;
 
 public enum ErrorMessage {
 
-    CAN_NOT_FIND_USER_BY_ID_ERROR_MESSAGE("Can not find user with given id: "),
+    CAN_NOT_FIND_USER_BY_EMAIL_ERROR_MESSAGE("Can not find user with given email address: "),
     CAN_NOT_FIND_CARD_BY_ID_ERROR_MESSAGE("Can not find card with given id: "),
     CAN_NOT_FIND_DECK_BY_ID_ERROR_MESSAGE("Can not find deck with given id: "),
     CAN_NOT_FIND_CARD_DECK_INTERSECTION_BY_ID_ERROR_MESSAGE("There is no such card in this deck"),

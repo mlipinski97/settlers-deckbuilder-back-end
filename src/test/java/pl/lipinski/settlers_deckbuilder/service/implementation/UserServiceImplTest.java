@@ -1,35 +1,39 @@
 package pl.lipinski.settlers_deckbuilder.service.implementation;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import pl.lipinski.settlers_deckbuilder.dao.dto.LoginDto;
+import pl.lipinski.settlers_deckbuilder.dao.dto.RegisterDto;
 import pl.lipinski.settlers_deckbuilder.dao.dto.UserDto;
 import pl.lipinski.settlers_deckbuilder.dao.entity.User;
 import pl.lipinski.settlers_deckbuilder.repository.UserRepository;
 import pl.lipinski.settlers_deckbuilder.service.UserService;
 import pl.lipinski.settlers_deckbuilder.util.JwtUtil;
 import pl.lipinski.settlers_deckbuilder.util.enums.Role;
+import pl.lipinski.settlers_deckbuilder.util.exception.EmailTakenException;
+import pl.lipinski.settlers_deckbuilder.util.exception.PermissionDeniedException;
 import pl.lipinski.settlers_deckbuilder.util.exception.UserNotFoundException;
 import pl.lipinski.settlers_deckbuilder.util.exception.WrongCredentialsException;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static java.util.Optional.of;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -92,7 +96,7 @@ class UserServiceImplTest {
         testUser.setIsActive(true);
         testUser.setPassword("password");
         //when
-        when(userRepository.findByEmail(testEmail)).thenReturn(Optional.of(testUser));
+        when(userRepository.findByEmail(testEmail)).thenReturn(of(testUser));
         //then
         UserDto receivedUserDto = userService.findByEmail(testEmail);
         verify(userRepository).findByEmail(testEmail);
@@ -126,7 +130,7 @@ class UserServiceImplTest {
         testLoginDto.setPassword(testPassword);
         //when
         when(authenticationManager.authenticate(any())).thenReturn(authentication);
-        when(userRepository.findByEmail(testEmail)).thenReturn(Optional.of(testUser));
+        when(userRepository.findByEmail(testEmail)).thenReturn(of(testUser));
         //then
         userService.authenticate(testLoginDto);
         verify(jwtUtil).generateToken(any());
@@ -156,14 +160,13 @@ class UserServiceImplTest {
     }
 
     @Test
-    @Disabled
     @DisplayName("when given wrong authentication credentials it throws WrongCredentialsException")
-    public void whenGivenWrongCredentialsItWrongCredentialsException() {
+    public void whenGivenWrongCredentialsItThrowsWrongCredentialsException() {
         //given
         String testEmail = "test@test.com";
         String testPassword = "password";
         String wrongPassword = "wrongPassword";
-        String wrongEmail= "wrongtest@test.com";
+        String wrongEmail = "wrongtest@test.com";
         User testUser = new User();
         testUser.setEmail(testEmail);
         testUser.setPassword(testPassword);
@@ -177,5 +180,104 @@ class UserServiceImplTest {
         verify(authenticationManager).authenticate(any());
         verify(userRepository, never()).findByEmail(testEmail);
         verify(jwtUtil, never()).generateToken(any());
+    }
+
+    @Test
+    @DisplayName("when given correct user credentials it sets user to inactive (delete user)")
+    public void whenGivenCorrectCredentialsItSetsUserToInactive() throws UserNotFoundException, PermissionDeniedException {
+        //given
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String testEmail = "test@test.com";
+        User testUser = new User();
+        testUser.setEmail(testEmail);
+        testUser.setIsActive(true);
+        testUser.setId(1L);
+        //when
+        when(authentication.getName()).thenReturn(testEmail);
+        when(authentication.getAuthorities()).thenReturn(Collections.singleton(new SimpleGrantedAuthority(Role.USER.getRole())));
+        when(userRepository.findByEmail(testEmail)).thenReturn(of(testUser));
+        //then
+        userService.deleteByEmail(testEmail);
+        verify(userRepository).save(any());
+        assertFalse(testUser.getIsActive());
+    }
+
+    @Test
+    @DisplayName("when given incorrect user email it throws UserNotFoundException")
+    public void whenGivenIncorrectEmailItThrowsUserNotFoundException() {
+        //given
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String testEmail = "test@test.com";
+        User testUser = new User();
+        testUser.setEmail(testEmail);
+        testUser.setIsActive(true);
+        testUser.setId(1L);
+        //when
+        when(authentication.getName()).thenReturn(testEmail);
+        when(authentication.getAuthorities()).thenReturn(Collections.singleton(new SimpleGrantedAuthority(Role.USER.getRole())));
+        //then
+        assertThrows(UserNotFoundException.class, () -> userService.deleteByEmail(testEmail));
+        verify(userRepository, never()).save(any());
+        assertTrue(testUser.getIsActive());
+    }
+
+    @Test
+    @DisplayName("when trying to delete user without permission it throws PermissionDeniedException")
+    public void whenTryingToDeleteUserWithoutPermissionItThrowsPermissionDeniedException() {
+        //given
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String testEmail = "test@test.com";
+        String emailToDelete = "testEmailToDelete@test.com";
+        User testUser = new User();
+        testUser.setEmail(emailToDelete);
+        testUser.setIsActive(true);
+        testUser.setId(1L);
+        //when
+        when(authentication.getName()).thenReturn(testEmail);
+        when(authentication.getAuthorities()).thenReturn(Collections.singleton(new SimpleGrantedAuthority(Role.USER.getRole())));
+        //then
+        assertThrows(PermissionDeniedException.class, () -> userService.deleteByEmail(emailToDelete));
+        verify(userRepository, never()).save(any());
+        assertTrue(testUser.getIsActive());
+    }
+
+    @Test
+    @DisplayName("when given correct non taken credentials it registers new account")
+    public void whenGivenCorrectNonTakenRegistrationCredentialsItRegistersNewAccount() throws EmailTakenException {
+        //given
+        RegisterDto testRegisterDto = new RegisterDto();
+        testRegisterDto.setEmail("test@test.com");
+        testRegisterDto.setPassword("password");
+        User testUser = modelMapper.map(testRegisterDto, User.class);
+        testUser.setPassword(passwordEncoder.encode(testUser.getPassword()));
+        testUser.setRole(Role.USER);
+        testUser.setIsActive(true);
+        //when
+        when(userRepository.save(any())).thenReturn(testUser);
+        //then
+        userService.register(testRegisterDto);
+        ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
+        verify(userRepository).save(userArgumentCaptor.capture());
+        User capturedUser = userArgumentCaptor.getValue();
+        assertEquals(testUser, capturedUser);
+    }
+
+    @Test
+    @DisplayName("when given email that is already registered it throws EmailTakenException")
+    public void whenGivenEmailThatIsAlreadyRegisteredItThrowsEmailTakenException() {
+        //given
+        RegisterDto testRegisterDto = new RegisterDto();
+        String testEmail = "test@test.com";
+        testRegisterDto.setEmail(testEmail);
+        testRegisterDto.setPassword("password");
+        User testUser = modelMapper.map(testRegisterDto, User.class);
+        testUser.setPassword(passwordEncoder.encode(testUser.getPassword()));
+        testUser.setRole(Role.USER);
+        testUser.setIsActive(true);
+        //when
+        when(userRepository.findByEmail(testEmail)).thenReturn(of(testUser));
+        //then
+        assertThrows(EmailTakenException.class, () -> userService.register(testRegisterDto));
+        verify(userRepository, never()).save(any());
     }
 }

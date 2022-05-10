@@ -85,7 +85,7 @@ public class UserServiceImpl implements UserService {
         validatePermission(email);
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException(
-                        email,
+                        CAN_NOT_FIND_USER_BY_EMAIL_ERROR_MESSAGE.getMessage() + email,
                         CAN_NOT_FIND_USER_BY_EMAIL_ERROR_CODE.getValue()
                 ));
         user.setIsActive(false);
