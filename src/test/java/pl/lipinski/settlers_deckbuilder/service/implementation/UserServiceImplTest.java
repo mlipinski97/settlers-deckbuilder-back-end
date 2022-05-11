@@ -16,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import pl.lipinski.settlers_deckbuilder.dao.dto.LoginDto;
 import pl.lipinski.settlers_deckbuilder.dao.dto.RegisterDto;
 import pl.lipinski.settlers_deckbuilder.dao.dto.UserDto;
+import pl.lipinski.settlers_deckbuilder.dao.entity.Deck;
 import pl.lipinski.settlers_deckbuilder.dao.entity.User;
 import pl.lipinski.settlers_deckbuilder.repository.UserRepository;
 import pl.lipinski.settlers_deckbuilder.service.UserService;
@@ -37,7 +38,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class UserServiceImplTest {
+public class UserServiceImplTest {
 
     ModelMapper modelMapper = new ModelMapper();
 
@@ -198,8 +199,11 @@ class UserServiceImplTest {
         when(userRepository.findByEmail(testEmail)).thenReturn(of(testUser));
         //then
         userService.deleteByEmail(testEmail);
-        verify(userRepository).save(any());
-        assertFalse(testUser.getIsActive());
+        ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
+        verify(userRepository).save(userArgumentCaptor.capture());
+        User capturedUser = userArgumentCaptor.getValue();
+        assertFalse(capturedUser.getIsActive());
+
     }
 
     @Test

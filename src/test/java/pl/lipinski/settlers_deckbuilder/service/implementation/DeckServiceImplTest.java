@@ -39,7 +39,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class DeckServiceImplTest {
+public class DeckServiceImplTest {
 
     ModelMapper modelMapper = new ModelMapper();
     @Mock
@@ -226,12 +226,14 @@ class DeckServiceImplTest {
         when(deckRepository.findById(any())).thenReturn(of(testDeck));
         //then
         deckService.setDeckPrivate(1L);
-        verify(deckRepository).save(testDeck);
-        assertEquals(AccessLevel.PRIVATE.getAccessLevel(), testDeck.getAccessLevel());
+        ArgumentCaptor<Deck> deckArgumentCaptor = ArgumentCaptor.forClass(Deck.class);
+        verify(deckRepository).save(deckArgumentCaptor.capture());
+        Deck capturedDeck = deckArgumentCaptor.getValue();
+        assertEquals(AccessLevel.PRIVATE.getAccessLevel(), capturedDeck.getAccessLevel());
     }
 
     @Test
-    @DisplayName("when given incorrect Id and user have permission when setting to privateit throws ElementNotFoundException")
+    @DisplayName("when given incorrect Id and user have permission when setting to private it throws ElementNotFoundException")
     public void whenGivenIncorrectIdAndHavePermissionWhenSettingPrivateItThrowsElementNotFoundException() {
         //given
         Long wrongId = -1L;
@@ -282,8 +284,10 @@ class DeckServiceImplTest {
         when(deckRepository.findById(any())).thenReturn(of(testDeck));
         //then
         deckService.setDeckPublic(1L);
-        verify(deckRepository).save(testDeck);
-        assertEquals(AccessLevel.PUBLIC.getAccessLevel(), testDeck.getAccessLevel());
+        ArgumentCaptor<Deck> deckArgumentCaptor = ArgumentCaptor.forClass(Deck.class);
+        verify(deckRepository).save(deckArgumentCaptor.capture());
+        Deck capturedDeck = deckArgumentCaptor.getValue();
+        assertEquals(AccessLevel.PUBLIC.getAccessLevel(), capturedDeck.getAccessLevel());
     }
 
     @Test

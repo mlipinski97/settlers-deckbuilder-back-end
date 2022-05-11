@@ -87,6 +87,12 @@ public class CardServiceImpl implements CardService {
         cardRepository.deleteById(id);
     }
 
+    //not safe... i dont even think it is needed. I honestly dont know why i did that this way. to be changed and not used until then.
+    /*TODO: Change that to be actual proper update logic...
+    * implement checking if card wanted to be edited even exists.
+    * implement checking if ID boundaries aren't crossed
+    * i.e. ID hasn't changed
+     */
     @Override
     public CardDto updateCard(CardDto cardDto) {
         Card card = modelMapper.map(cardDto, Card.class);
