@@ -13,6 +13,7 @@ import pl.lipinski.settlers_deckbuilder.service.CardService;
 import pl.lipinski.settlers_deckbuilder.util.exception.ElementNotFoundByIdException;
 import pl.lipinski.settlers_deckbuilder.util.specification.CardSpecification;
 
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static pl.lipinski.settlers_deckbuilder.util.enums.ErrorCode.CAN_NOT_FIND_CARD_BY_ID_ERROR_CODE;
@@ -87,16 +88,15 @@ public class CardServiceImpl implements CardService {
         cardRepository.deleteById(id);
     }
 
-    //not safe... i dont even think it is needed. I honestly dont know why i did that this way. to be changed and not used until then.
-    /*TODO: Change that to be actual proper update logic...
-    * implement checking if card wanted to be edited even exists.
-    * implement checking if ID boundaries aren't crossed
-    * i.e. ID hasn't changed
-     */
     @Override
-    public CardDto updateCard(CardDto cardDto) {
-        Card card = modelMapper.map(cardDto, Card.class);
-        return modelMapper.map(cardRepository.save(card), CardDto.class);
+    public CardDto updateCardById(CardDto cardDto, Long id) throws ElementNotFoundByIdException {
+        cardRepository.findById(id).orElseThrow( ()-> new ElementNotFoundByIdException(
+                CAN_NOT_FIND_CARD_BY_ID_ERROR_MESSAGE.getMessage() + id,
+                CAN_NOT_FIND_USER_BY_ID_ERROR_CODE.getValue()
+        ));
+        cardDto.setId(id);
+        Card cardToBeChanged = modelMapper.map(cardDto, Card.class);
+        return modelMapper.map(cardRepository.save(cardToBeChanged), CardDto.class);
     }
 
 }

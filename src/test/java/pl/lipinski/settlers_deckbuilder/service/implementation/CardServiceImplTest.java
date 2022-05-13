@@ -18,10 +18,7 @@ import pl.lipinski.settlers_deckbuilder.repository.CardRepository;
 import pl.lipinski.settlers_deckbuilder.service.CardService;
 import pl.lipinski.settlers_deckbuilder.util.exception.ElementNotFoundByIdException;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.Optional.of;
@@ -228,6 +225,75 @@ class CardServiceImplTest {
         Long wrongId = -1L;
         //then
         assertThrows(ElementNotFoundByIdException.class, () -> cardService.deleteById(wrongId));
+        verify(cardRepository, never()).save(any());
+    }
+
+    @Test
+    public void whenGivenNewCardDetailsChosenCardIsChanged() throws ElementNotFoundByIdException {
+        //given
+        CardDto cardDtoToBeChanged = new CardDto();
+        cardDtoToBeChanged.setBuildingBonus("bonus");
+        cardDtoToBeChanged.setColor("white");
+        cardDtoToBeChanged.setCostFirstResourceQuantity(1);
+        cardDtoToBeChanged.setCostFirstResourceType("Stone");
+        cardDtoToBeChanged.setCostFoundation(1);
+        cardDtoToBeChanged.setCostSecondResourceQuantity(2);
+        cardDtoToBeChanged.setCostSecondResourceType("gold");
+        cardDtoToBeChanged.setDealEffect("deal effect");
+        cardDtoToBeChanged.setEffect("effect");
+        cardDtoToBeChanged.setExpansion("base");
+        cardDtoToBeChanged.setFaction("test");
+        cardDtoToBeChanged.setId(1L);
+        cardDtoToBeChanged.setName("changedTestCardName");
+        cardDtoToBeChanged.setQuantity(2);
+        Card CardToBeChanged = modelMapper.map(cardDtoToBeChanged, Card.class);
+        CardDto changedCardDto = new CardDto();
+        changedCardDto.setBuildingBonus("bonus");
+        changedCardDto.setColor("white");
+        changedCardDto.setCostFirstResourceQuantity(1);
+        changedCardDto.setCostFirstResourceType("Stone");
+        changedCardDto.setCostFoundation(1);
+        changedCardDto.setCostSecondResourceQuantity(2);
+        changedCardDto.setCostSecondResourceType("gold");
+        changedCardDto.setDealEffect("deal effect");
+        changedCardDto.setEffect("effect");
+        changedCardDto.setExpansion("base");
+        changedCardDto.setFaction("test");
+        changedCardDto.setId(1L);
+        changedCardDto.setName("changedTestCardName");
+        changedCardDto.setQuantity(2);
+        Card changedCard = modelMapper.map(changedCardDto, Card.class);
+        //when
+        when(cardRepository.findById(1L)).thenReturn(Optional.of(CardToBeChanged));
+        when(cardRepository.save(changedCard)).thenReturn(changedCard);
+        //then
+        cardService.updateCardById(changedCardDto, 1L);
+        ArgumentCaptor<Card> cardArgumentCaptor = ArgumentCaptor.forClass(Card.class);
+        verify(cardRepository).save(cardArgumentCaptor.capture());
+        Card capturedCard = cardArgumentCaptor.getValue();
+        assertEquals(changedCard, capturedCard);
+    }
+
+    @Test
+    public void whenGivenNewCardDetailsButIncorrectIdItThrowsElementNotFoundByIdException() {
+        //given
+        CardDto changedCardDto = new CardDto();
+        changedCardDto.setBuildingBonus("bonus");
+        changedCardDto.setColor("white");
+        changedCardDto.setCostFirstResourceQuantity(1);
+        changedCardDto.setCostFirstResourceType("Stone");
+        changedCardDto.setCostFoundation(1);
+        changedCardDto.setCostSecondResourceQuantity(2);
+        changedCardDto.setCostSecondResourceType("gold");
+        changedCardDto.setDealEffect("deal effect");
+        changedCardDto.setEffect("effect");
+        changedCardDto.setExpansion("base");
+        changedCardDto.setFaction("test");
+        changedCardDto.setId(1L);
+        changedCardDto.setName("changedTestCardName");
+        changedCardDto.setQuantity(2);
+        //then
+        assertThrows(ElementNotFoundByIdException.class, () -> cardService.updateCardById(changedCardDto, 1L));
         verify(cardRepository, never()).save(any());
     }
 }

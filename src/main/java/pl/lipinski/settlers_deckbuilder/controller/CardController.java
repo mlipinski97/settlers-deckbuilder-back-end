@@ -41,8 +41,8 @@ public class CardController {
     }
 
     @PatchMapping
-    public CardDto updateCard(@RequestBody CardDto cardDto){
-        return cardService.updateCard(cardDto);
+    public CardDto updateCard(@RequestBody CardDto cardDto, @PathVariable Long id) throws ElementNotFoundByIdException {
+        return cardService.updateCardById(cardDto, id);
     }
 
     @DeleteMapping("/{id}")

@@ -21,5 +21,5 @@ public interface CardService {
 
     void deleteById(Long id) throws ElementNotFoundByIdException;
 
-    CardDto updateCard(CardDto cardDto) throws ElementNotFoundByIdException;
+    CardDto updateCardById(CardDto cardDto, Long id) throws ElementNotFoundByIdException;
 }
